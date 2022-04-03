@@ -32,11 +32,35 @@ class ModeloSimplex():
     def fila_pivote(self):
         resultado = float
         return resultado
+
+
     def gauss(self,pivote_fila, pivote_columna):
-        valor_pivote = Self.restriccion[pivote_fila][pivote_columna]
-        for i in self.funcion_objetivo:
+        # Se ubica el elemento pivote
+        valor_pivote = self.restriccion[pivote_fila][pivote_columna]
+
+        # Se divide la fila pivote entre el elemento pivote
+        for i in range(self.n_variables):
             self.restriccion[pivote_fila][i] = self.restriccion[pivote_fila][i]/valor_pivote
-        return 0
+
+        # Se obtiene el elemento pivote de la fila
+        aux = self.funcion_objetivo[pivote_columna]
+
+        # Fila original - pivote de la fila * fila pivote
+        for i in range(self.n_variables):
+            self.funcion_objetivo[i] = self.funcion_objetivo[i] - (aux * self.restriccion[pivote_fila][i])
+        for i in range(self.n_variables):
+            # Se obtiene el elemento pivote de la fila
+            aux = self.restriccion[i][pivote_columna]
+
+            """
+            Fila original - pivote de la fila * fila pivote 
+            Exceptuando la fila pivote
+            """
+            for j in range(self.n_restriccion):
+                if i != pivote_fila:
+                    self.restriccion[i][j] = self.restriccion[i][j] - (aux * self.restriccion[pivote_fila][i])
+
+
     def parada_max(self):
         resultado = bool
         return resultado
