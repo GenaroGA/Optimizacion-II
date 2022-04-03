@@ -1,5 +1,6 @@
 from typing_extensions import Self
 import numpy as np
+import numpy
 
 class ModeloSimplex():
     funcion_objetivo = np.array(float)
@@ -20,8 +21,12 @@ class ModeloSimplex():
         resultado = [[],[]]
         return resultado
     def tableau_max(self):
+        funcion_objetivo = numpy.multiply(funcion_objetivo,─1)
+        restriccion
         return 0
     def tableau_min(self):
+        funcion_objetivo
+        restriccion
         return 0
     def columna_pivote_max(self):
         resultado = int
