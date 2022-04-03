@@ -1,3 +1,4 @@
+from typing_extensions import Self
 import numpy as np
 
 class ModeloSimplex():
@@ -31,7 +32,10 @@ class ModeloSimplex():
     def fila_pivote(self):
         resultado = float
         return resultado
-    def gauss(self):
+    def gauss(self,pivote_fila, pivote_columna):
+        valor_pivote = Self.restriccion[pivote_fila][pivote_columna]
+        for i in self.funcion_objetivo:
+            self.restriccion[pivote_fila][i] = self.restriccion[pivote_fila][i]/valor_pivote
         return 0
     def parada_max(self):
         resultado = bool
