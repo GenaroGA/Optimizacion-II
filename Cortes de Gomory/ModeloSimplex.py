@@ -1,3 +1,4 @@
+from math import modf
 import numpy as np
 
 class ModeloSimplex():
@@ -54,10 +55,8 @@ class ModeloSimplex():
     def simplex_min():
         resultado = [[],[]]
         return resultado
-    def tableau_max(self):
+    def tableau(self):
         funcion_objetivo = np.multiply(funcion_objetivo,-1)
-    def tableau_min(self):
-        self.funcion_objetivo
     def columna_pivote_max(self):
         resultado = int
         return resultado
@@ -114,3 +113,46 @@ class ModeloSimplex():
             if self.funcion__objetivo[i] > 0 :
                 resultado=True; 
         return resultado
+    def corte_gomory(self):
+
+        # Se busca el índice del resultado minimo del tableau optimo
+
+        aux = np.zeros(shape=(self.n_restriccion))
+        for i in range (self.n_restriccion):
+            aux[i] = self.restriccion[i][self.n_restriccion]
+        renglon_minimo = list.index(min(aux))
+
+        # Se obtiene la parte entera y la parte fraccionaria del renglon seleccionado
+        aux = np.zeros(shape=(self.n_variables+1))
+        # Se obtiene la parte entera de cada elemento del renglon pivote identificado y se calcula el renglon del corte
+        for i in range (self.n_variables+1):
+            parte_entera,parte_entera = modf(self.restriccion[renglon_minimo][i])
+            aux[i] = parte_entera - self.restriccion[renglon_minimo][i]
+
+
+        # Se inserta una columna de ceros en el tableau y en el vector del corte (aux)
+
+        #Se insertan ceros al final del arreglo y/o matriz
+        ceros = np.zeros(shape=(self.n_restriccion,1))
+        self.restriccion = np.append(self.restriccion, ceros, axis=1)
+        self.funcion_objetivo = np.append(self.funcion_objetivo, 0)
+        aux = np.append(aux, 1)
+
+        #Se intercambia la ultima fila y la penultima para reacomodar el tableau
+        #Matriz de restricciones 
+        for i in range(self.n_restriccion):
+            cambio = self.restriccion[i][len(self.restriccion)]
+            self.restriccion[i][len(self.restriccion)] = self.restriccion[i][len(self.restriccion)-1]
+            self.restriccion[i][len(self.restriccion)-1] = cambio
+        #Arreglo de la función objetivo
+        cambio = self.funcion_objetivo[len(self.funcion_objetivo)]
+        self.funcion_objetivo[len(self.funcion_objetivo)] = self.funcion_objetivo[len(self.funcion_objetivo)-1]
+        self.funcion_objetivo[len(self.funcion_objetivo)-1] = cambio
+        #Arreglo del corte
+        cambio = aux[len(self.aux)]
+        aux[len(self.aux)] = self.aux[len(self.aux)-1]
+        aux[len(self.aux)-1] = cambio
+
+        #Se inserta el arreglo de corte a la matriz de restricciones
+        self.restriccion = np.vstack([self.restriccion,aux])
+        return 0
