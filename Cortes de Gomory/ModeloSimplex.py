@@ -65,9 +65,11 @@ class ModeloSimplex():
         return resultado
     def fila_pivote(self,pivote_columna):
         resultado = 1
-        divisiones = np.zeros(shape=(self.n_restriccion))
+        divisiones = np.zeros(shape=(0))
         for i in range(self.n_restriccion):
-            divisiones[i]=self.restriccion[i][self.n_variables+1]/self.restriccion[i][pivote_columna]
+            if self.restriccion[i][self.n_variables+1] != 0:
+                division = self.restriccion[i][self.n_variables+1]/self.restriccion[i][pivote_columna]
+                divisiones = np.append(divisiones,division)
         resultado = list.index(min(divisiones))
         return resultado
 
@@ -155,4 +157,13 @@ class ModeloSimplex():
 
         #Se inserta el arreglo de corte a la matriz de restricciones
         self.restriccion = np.vstack([self.restriccion,aux])
-        return 0
+        return renglon_minimo
+    def columna_pivote_gomory(self, fila_pivote):
+        resultado = 1
+        divisiones = np.zeros(shape=(0))
+        for i in range(len(self.funcion_objetivo)):
+            if self.restriccion[fila_pivote][i] != 0:
+                division = abs(self.funcion_objetivo[i]/self.restriccion[fila_pivote][i])
+                divisiones = np.append(divisiones,division)
+        resultado = list.index(min(divisiones))
+        return resultado
