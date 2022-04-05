@@ -1,8 +1,9 @@
 import numpy as np
 
 class ModeloSimplex():
-    n_variables = 3
-    n_restriccion = 3
+    n_variables = 6
+    n_restriccion = 6
+    variables_basicas = np.zeros(shape=(n_restriccion))
     funcion_objetivo = np.zeros(shape=(n_variables+1))
     restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
     max = True
@@ -43,6 +44,10 @@ class ModeloSimplex():
                 self.restriccion[i][j] = input("x" + str(i) + " = ")
             self.restriccion[i][n_varaibles+1] = input("b" + str(i))
 
+        #Se establecen la variables básicas
+        for i in range (n_restriccion):
+            self.variables_basicas[i] = i+1
+
     def simplex_max():
         resultado = [[],[]]
         return resultado
@@ -67,6 +72,8 @@ class ModeloSimplex():
         resultado = list.index(min(divisiones))
         return resultado
 
+    def variables_basicas(self,pivote_fila,pivote_columna):
+        self.variables_basicas[pivote_fila] = pivote_columna+1
 
     def gauss(self,pivote_fila, pivote_columna):
         # Se ubica el elemento pivote
