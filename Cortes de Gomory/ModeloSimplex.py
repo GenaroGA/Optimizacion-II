@@ -8,7 +8,6 @@ class ModeloSimplex():
     max = True
     """
     Esto es solo un maquetado del la case ModeloSimplex 
-
     Los métodos con return 0 modifican al objeto por lo 
     que la función final ya no debe retornar nada """
 
@@ -32,8 +31,12 @@ class ModeloSimplex():
     def columna_pivote_min(self):
         resultado = int
         return resultado
-    def fila_pivote(self):
-        resultado = float
+    def fila_pivote(self,n_variables,pivote_columna):
+        resultado = int
+        divisiones = np.zeros(shape=(self.n_restriccion))
+        for i in range(self.n_restriccion):
+            divisiones[i]=self.restriccion[i][self.n_variables+1]/self.restriccion[i][pivote_columna]
+        resultado = list.index(min(divisiones[i]))
         return resultado
 
 
@@ -65,8 +68,14 @@ class ModeloSimplex():
 
 
     def parada_max(self):
-        resultado = bool
+        resultado = False
+        for i in range( len(self.funcion__objetivo) )
+            if( self.funcion__objetivo[i] < 0 )
+                resultado=True; 
         return resultado
     def parada_min(self):
-        resultado = bool
+        resultado = False
+        for i in range( len(self.funcion__objetivo) )
+            if( self.funcion__objetivo[i] > 0 )
+                resultado=True; 
         return resultado
