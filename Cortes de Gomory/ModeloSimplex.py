@@ -68,8 +68,14 @@ class ModeloSimplex():
 
 
     def parada_max(self):
-        resultado = bool
+        resultado = False
+        for i in range( len(self.funcion__objetivo) )
+            if( self.funcion__objetivo[i] < 0 )
+                resultado=True; 
         return resultado
     def parada_min(self):
-        resultado = bool
+        resultado = False
+        for i in range( len(self.funcion__objetivo) )
+            if( self.funcion__objetivo[i] > 0 )
+                resultado=True; 
         return resultado
