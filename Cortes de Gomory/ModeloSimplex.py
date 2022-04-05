@@ -1,15 +1,47 @@
 import numpy as np
 
 class ModeloSimplex():
-    funcion_objetivo = np.array(float)
-    n_variables = int
-    n_restriccion = int
-    restriccion = np.zeros(shape = (n_variables,n_restriccion))
+    n_variables = 3
+    n_restriccion = 3
+    funcion_objetivo = np.zeros(shape=(n_variables+1))
+    restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
     max = True
     """
     Esto es solo un maquetado del la case ModeloSimplex 
     Los métodos con return 0 modifican al objeto por lo 
     que la función final ya no debe retornar nada """
+
+    def __init__(self):
+        """ 
+        Se guarda la cantidad de variables y restricciones
+        del modelo
+        """
+        n_varaibles = input("Número Variables = ")
+        n_restriccion = input("Número de restricciones = ")
+        self.n_variables = n_varaibles
+        self.n_restriccion = n_restriccion
+
+        #Se solicitan y almacenan los coeficientes de la FO en su forma estandar
+        print("************************************************")
+        print("*Digita los coeficientes de la función objetivo*")
+        print("************************************************")
+        for i in range (n_varaibles):
+            self.funcion_objetivo[i] = input("x" + str(i) + " = ")
+        self.funcion_objetivo[n_varaibles+1] = 0
+
+        """ 
+        Se solicitan y almacenan los coeficientes de las ecuaciones
+        que conforman las restricciones del modelo en su forma estandar
+        """
+
+        print("**********************************************")
+        print("*Digita los coeficientes de las restricciones*")
+        print("**********************************************")
+        for i in range (n_restriccion):
+            print("***Restricción " + str(i) + ":\n")
+            for j in range (n_varaibles):
+                self.restriccion[i][j] = input("x" + str(i) + " = ")
+            self.restriccion[i][n_varaibles+1] = input("b" + str(i))
 
     def simplex_max():
         resultado = [[],[]]
@@ -19,24 +51,20 @@ class ModeloSimplex():
         return resultado
     def tableau_max(self):
         funcion_objetivo = np.multiply(funcion_objetivo,-1)
-        self.restriccion
-        return 0
     def tableau_min(self):
         self.funcion_objetivo
-        self.restriccion
-        return 0
     def columna_pivote_max(self):
         resultado = int
         return resultado
     def columna_pivote_min(self):
         resultado = int
         return resultado
-    def fila_pivote(self,n_variables,pivote_columna):
-        resultado = int
+    def fila_pivote(self,pivote_columna):
+        resultado = 1
         divisiones = np.zeros(shape=(self.n_restriccion))
         for i in range(self.n_restriccion):
             divisiones[i]=self.restriccion[i][self.n_variables+1]/self.restriccion[i][pivote_columna]
-        resultado = list.index(min(divisiones[i]))
+        resultado = list.index(min(divisiones))
         return resultado
 
 
