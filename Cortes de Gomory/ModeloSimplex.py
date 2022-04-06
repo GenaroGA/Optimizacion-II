@@ -2,9 +2,9 @@ from math import modf
 import numpy as np
 
 class ModeloSimplex():
-    n_variables = 6
-    n_restriccion = 6
-    variables_basicas = np.zeros(shape=(n_restriccion))
+    n_restriccion = 3
+    n_variables = 3
+    variables_basicas_arr = np.zeros(shape=(n_restriccion))
     funcion_objetivo = np.zeros(shape=(n_variables+1))
     restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
     max = True
@@ -13,23 +13,31 @@ class ModeloSimplex():
     Los métodos con return 0 modifican al objeto por lo 
     que la función final ya no debe retornar nada """
 
-    def __init__(self):
+    def __init__(self,n_variables,n_restriccion):
         """ 
         Se guarda la cantidad de variables y restricciones
         del modelo
         """
-        n_varaibles = input("Número Variables = ")
-        n_restriccion = input("Número de restricciones = ")
-        self.n_variables = n_varaibles
+        self.n_variables = n_variables
         self.n_restriccion = n_restriccion
+        self.variables_basicas_arr = np.zeros(shape=(n_restriccion))
+        self.funcion_objetivo = np.zeros(shape=(n_variables+1))
+        self.restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
+
+        #Se determina si se va a maximizar o minimizar
+        max_min = input("(1.-Max / 2.-Min?):")
+        if max_min == 1:
+            self.max = True
+        else:
+            self.max = False
 
         #Se solicitan y almacenan los coeficientes de la FO en su forma estandar
         print("************************************************")
         print("*Digita los coeficientes de la función objetivo*")
         print("************************************************")
-        for i in range (n_varaibles):
+        for i in range (n_variables):
             self.funcion_objetivo[i] = input("x" + str(i) + " = ")
-        self.funcion_objetivo[n_varaibles+1] = 0
+        
 
         """ 
         Se solicitan y almacenan los coeficientes de las ecuaciones
@@ -41,20 +49,15 @@ class ModeloSimplex():
         print("**********************************************")
         for i in range (n_restriccion):
             print("***Restricción " + str(i) + ":\n")
-            for j in range (n_varaibles):
-                self.restriccion[i][j] = input("x" + str(i) + " = ")
-            self.restriccion[i][n_varaibles+1] = input("b" + str(i))
+            for j in range (n_variables):
+                self.restriccion[i][j] = input("x" + str(j) + " = ")
+            self.restriccion[i][n_variables] = input("b" + str(i) + " = ")
 
         #Se establecen la variables básicas
         for i in range (n_restriccion):
-            self.variables_basicas[i] = i+1
+            self.variables_basicas_arr[i]=i+1
 
-    def simplex_max():
-        resultado = [[],[]]
-        return resultado
-    def simplex_min():
-        resultado = [[],[]]
-        return resultado
+
     def tableau(self):
         funcion_objetivo = np.multiply(funcion_objetivo,-1)
     def columna_pivote_max(self):
@@ -74,7 +77,7 @@ class ModeloSimplex():
         return resultado
 
     def variables_basicas(self,pivote_fila,pivote_columna):
-        self.variables_basicas[pivote_fila] = pivote_columna+1
+        self.variables_basicas_arr[pivote_fila] = pivote_columna+1
 
     def gauss(self,pivote_fila, pivote_columna):
         # Se ubica el elemento pivote
