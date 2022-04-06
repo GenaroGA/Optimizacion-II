@@ -2,12 +2,12 @@ from math import modf
 import numpy as np
 
 class ModeloSimplex():
-    n_restriccion = 3
-    n_variables = 3
+    """ n_restriccion = None
+    n_variables = None
     variables_basicas_arr = np.zeros(shape=(n_restriccion))
     funcion_objetivo = np.zeros(shape=(n_variables+1))
     restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
-    max = True
+    max = True """
     """
     Esto es solo un maquetado del la case ModeloSimplex 
     Los métodos con return 0 modifican al objeto por lo 
@@ -70,8 +70,8 @@ class ModeloSimplex():
         resultado = 1
         divisiones = np.zeros(shape=(0))
         for i in range(self.n_restriccion):
-            if self.restriccion[i][self.n_variables+1] != 0:
-                division = self.restriccion[i][self.n_variables+1]/self.restriccion[i][pivote_columna]
+            if self.restriccion[i][self.n_variables] != 0:
+                division = self.restriccion[i][self.n_variables]/self.restriccion[i][pivote_columna]
                 divisiones = np.append(divisiones,division)
         resultado = np.argmin(divisiones)
         return resultado
@@ -84,16 +84,16 @@ class ModeloSimplex():
         valor_pivote = self.restriccion[pivote_fila][pivote_columna]
 
         # Se divide la fila pivote entre el elemento pivote
-        for i in range(self.n_variables):
+        for i in range(self.n_variables+1):
             self.restriccion[pivote_fila][i] = self.restriccion[pivote_fila][i]/valor_pivote
 
         # Se obtiene el elemento pivote de la fila
         aux = self.funcion_objetivo[pivote_columna]
 
         # Fila original - pivote de la fila * fila pivote
-        for i in range(self.n_variables):
+        for i in range(self.n_variables+1):
             self.funcion_objetivo[i] = self.funcion_objetivo[i] - (aux * self.restriccion[pivote_fila][i])
-        for i in range(self.n_variables):
+        for i in range(self.n_restriccion):
             # Se obtiene el elemento pivote de la fila
             aux = self.restriccion[i][pivote_columna]
 
@@ -101,21 +101,22 @@ class ModeloSimplex():
             Fila original - pivote de la fila * fila pivote 
             Exceptuando la fila pivote
             """
-            for j in range(self.n_restriccion):
+            for j in range(self.n_variables+1):
                 if i != pivote_fila:
-                    self.restriccion[i][j] = self.restriccion[i][j] - (aux * self.restriccion[pivote_fila][i])
+                    self.restriccion[i][j] = self.restriccion[i][j] - (aux * self.restriccion[pivote_fila][j])
 
-
+    #Si hay valores negativos en la función objetivo entonces devuelve True
     def parada_max(self):
         resultado = False
-        for i in range( len(self.funcion__objetivo) ):
-            if self.funcion__objetivo[i] < 0 :
+        for i in range( len(self.funcion_objetivo) -1 ):
+            if self.funcion_objetivo[i] < 0 :
                 resultado=True; 
         return resultado
+    #Si hay valores positivos en la función objetivo entonces devuelve True
     def parada_min(self):
         resultado = False
-        for i in range( len(self.funcion__objetivo) ):
-            if self.funcion__objetivo[i] > 0 :
+        for i in range( len(self.funcion_objetivo) -1 ):
+            if self.funcion_objetivo[i] > 0 :
                 resultado=True; 
         return resultado
     def corte_gomory(self):

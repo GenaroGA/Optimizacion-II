@@ -1,4 +1,3 @@
-from numpy import int32
 import ModeloSimplex as MS
 
 variables = int(input("Variables = "))
@@ -11,4 +10,15 @@ print("*Tableau Inicial*")
 print("*****************")
 print(modelo.funcion_objetivo)
 print(modelo.restriccion)
+
+parada = True
+while parada:
+    c_pivote = modelo.columna_pivote_max()
+    f_pivote = modelo.fila_pivote(c_pivote)
+    modelo.variables_basicas(f_pivote,c_pivote)
+    modelo.gauss(f_pivote,c_pivote)
+    print(modelo.funcion_objetivo)
+    print(modelo.restriccion)
+    parada = modelo.parada_max()
+
 
