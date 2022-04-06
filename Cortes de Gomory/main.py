@@ -20,5 +20,15 @@ while parada:
     print(modelo.funcion_objetivo)
     print(modelo.restriccion)
     parada = modelo.parada_max()
+parada = True
 
+while parada:
+    
+    f_pivote = modelo.corte_gomory()
+    c_pivote = modelo.columna_pivote_gomory(f_pivote)
+
+    modelo.gauss(f_pivote,c_pivote)
+    print(modelo.funcion_objetivo)
+    print(modelo.restriccion)
+    parada = modelo.parada_gomory()
 

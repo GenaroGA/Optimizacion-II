@@ -122,8 +122,8 @@ class ModeloSimplex():
     def corte_gomory(self):
 
         # Se busca el índice del resultado minimo del tableau optimo
-
-        aux = np.zeros(shape=(self.n_restriccion))
+        filas,columnas = self.restriccion.shape
+        aux = np.zeros(shape=(columnas))
         for i in range (self.n_restriccion):
             aux[i] = self.restriccion[i][self.n_restriccion]
         renglon_minimo = np.argmin(aux)
@@ -139,7 +139,8 @@ class ModeloSimplex():
         # Se inserta una columna de ceros en el tableau y en el vector del corte (aux)
 
         #Se insertan ceros al final del arreglo y/o matriz
-        ceros = np.zeros(shape=(self.n_restriccion,1))
+        
+        ceros = np.zeros(shape=(filas,1))
         self.restriccion = np.append(self.restriccion, ceros, axis=1)
         self.funcion_objetivo = np.append(self.funcion_objetivo, 0)
         aux = np.append(aux, 1)
@@ -151,13 +152,13 @@ class ModeloSimplex():
             self.restriccion[i][len(self.restriccion)] = self.restriccion[i][len(self.restriccion)-1]
             self.restriccion[i][len(self.restriccion)-1] = cambio
         #Arreglo de la función objetivo
-        cambio = self.funcion_objetivo[len(self.funcion_objetivo)]
-        self.funcion_objetivo[len(self.funcion_objetivo)] = self.funcion_objetivo[len(self.funcion_objetivo)-1]
-        self.funcion_objetivo[len(self.funcion_objetivo)-1] = cambio
+        cambio = self.funcion_objetivo[len(self.funcion_objetivo)-1]
+        self.funcion_objetivo[len(self.funcion_objetivo)-1] = self.funcion_objetivo[len(self.funcion_objetivo)-2]
+        self.funcion_objetivo[len(self.funcion_objetivo)-2] = cambio
         #Arreglo del corte
-        cambio = aux[len(self.aux)]
-        aux[len(self.aux)] = self.aux[len(self.aux)-1]
-        aux[len(self.aux)-1] = cambio
+        cambio = aux[len(aux)-1]
+        aux[len(aux)-1] = aux[len(aux)-2]
+        aux[len(aux)-2] = cambio
 
         #Se inserta el arreglo de corte a la matriz de restricciones
         self.restriccion = np.vstack([self.restriccion,aux])
@@ -165,9 +166,17 @@ class ModeloSimplex():
     def columna_pivote_gomory(self, fila_pivote):
         resultado = 1
         divisiones = np.zeros(shape=(0))
-        for i in range(len(self.funcion_objetivo)):
+        for i in range(len(self.funcion_objetivo)-1):
             if self.restriccion[fila_pivote][i] != 0:
                 division = abs(self.funcion_objetivo[i]/self.restriccion[fila_pivote][i])
                 divisiones = np.append(divisiones,division)
         resultado = np.argmin(divisiones)
         return resultado
+
+    def parada_gomory(self):
+        filas,columnas = self.restriccion.shape
+        for i in range (columnas-1):
+            if np.equal(np.mod(self.restriccion[filas][i],1),0):
+                return False
+            else:
+                return True
