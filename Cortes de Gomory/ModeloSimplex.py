@@ -59,12 +59,12 @@ class ModeloSimplex():
 
 
     def tableau(self):
-        funcion_objetivo = np.multiply(funcion_objetivo,-1)
+        self.funcion_objetivo = np.multiply(self.funcion_objetivo,-1)
     def columna_pivote_max(self):
-        resultado = int
+        resultado = np.argmin(self.funcion_objetivo)
         return resultado
     def columna_pivote_min(self):
-        resultado = int
+        resultado = np.argmax(self.funcion_objetivo)
         return resultado
     def fila_pivote(self,pivote_columna):
         resultado = 1
@@ -73,7 +73,7 @@ class ModeloSimplex():
             if self.restriccion[i][self.n_variables+1] != 0:
                 division = self.restriccion[i][self.n_variables+1]/self.restriccion[i][pivote_columna]
                 divisiones = np.append(divisiones,division)
-        resultado = list.index(min(divisiones))
+        resultado = np.argmin(divisiones)
         return resultado
 
     def variables_basicas(self,pivote_fila,pivote_columna):
@@ -125,7 +125,7 @@ class ModeloSimplex():
         aux = np.zeros(shape=(self.n_restriccion))
         for i in range (self.n_restriccion):
             aux[i] = self.restriccion[i][self.n_restriccion]
-        renglon_minimo = list.index(min(aux))
+        renglon_minimo = np.argmin(aux)
 
         # Se obtiene la parte entera y la parte fraccionaria del renglon seleccionado
         aux = np.zeros(shape=(self.n_variables+1))
@@ -168,5 +168,5 @@ class ModeloSimplex():
             if self.restriccion[fila_pivote][i] != 0:
                 division = abs(self.funcion_objetivo[i]/self.restriccion[fila_pivote][i])
                 divisiones = np.append(divisiones,division)
-        resultado = list.index(min(divisiones))
+        resultado = np.argmin(divisiones)
         return resultado

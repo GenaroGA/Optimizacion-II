@@ -1,8 +1,14 @@
+from numpy import int32
 import ModeloSimplex as MS
 
-modelo = MS.ModeloSimplex(3,3)
-print(modelo.variables_basicas_arr)
-print(modelo.restriccion)
-print(modelo.funcion_objetivo)
+variables = int(input("Variables = "))
+restricciones = int(input("Restricciones = "))
 
+modelo = MS.ModeloSimplex(variables,restricciones)
+modelo.tableau()
+print("*****************")
+print("*Tableau Inicial*")
+print("*****************")
+print(modelo.funcion_objetivo)
+print(modelo.restriccion)
 
