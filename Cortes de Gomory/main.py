@@ -12,7 +12,7 @@ print(modelo.funcion_objetivo)
 print(modelo.restriccion)
 
 parada = True
-if modelo.max :
+if modelo.max == True:
     while parada:
         c_pivote = modelo.columna_pivote_max()
         f_pivote = modelo.fila_pivote(c_pivote)
@@ -45,7 +45,8 @@ while parada:
     
     f_pivote = modelo.corte_gomory()
     c_pivote = modelo.columna_pivote_gomory(f_pivote)
-    modelo.variables_basicas(f_pivote,c_pivote)
+    f_pivote = len(modelo.restriccion)-1
+    #modelo.variables_basicas(f_pivote,c_pivote)
     modelo.gauss(f_pivote,c_pivote)
     print(modelo.funcion_objetivo)
     print(modelo.restriccion)

@@ -15,7 +15,7 @@ class ModeloSimplex():
         self.restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
 
         #Se determina si se va a maximizar o minimizar
-        max_min = input("(1.-Max / 2.-Min?):")
+        max_min = int(input("(1.-Max / 2.-Min?):"))
         if max_min == 1:
             self.max = True
         else:
@@ -45,7 +45,8 @@ class ModeloSimplex():
 
         #Se establecen la variables básicas
         for i in range (n_restriccion):
-            self.variables_basicas_arr[i]=i+1
+            n = i
+            self.variables_basicas_arr[i]=n+1
 
 
     def tableau(self):
@@ -60,14 +61,15 @@ class ModeloSimplex():
         resultado = 1
         divisiones = np.zeros(shape=(0))
         for i in range(self.n_restriccion):
-            if self.restriccion[i][self.n_variables] != 0:
+            if self.restriccion[i][pivote_columna] != 0:
                 division = self.restriccion[i][self.n_variables]/self.restriccion[i][pivote_columna]
                 divisiones = np.append(divisiones,division)
         resultado = np.argmin(divisiones)
         return resultado
 
     def variables_basicas(self,pivote_fila,pivote_columna):
-        self.variables_basicas_arr[pivote_fila] = pivote_columna+1
+        indice = np.where(self.variables_basicas_arr == pivote_fila+1)
+        self.variables_basicas_arr[indice[0][0]] = pivote_columna+1
 
     def gauss(self,pivote_fila, pivote_columna):
         # Se ubica el elemento pivote
@@ -113,17 +115,22 @@ class ModeloSimplex():
 
         # Se busca el índice del resultado minimo del tableau optimo
         filas,columnas = self.restriccion.shape
-        aux = np.zeros(shape=(columnas))
-        for i in range (self.n_restriccion):
-            aux[i] = self.restriccion[i][self.n_restriccion]
+        aux = np.zeros(shape=(0))
+        for i in range (filas):
+            aux = np.append(aux,self.restriccion[i][columnas-1])
         renglon_minimo = np.argmin(aux)
 
         # Se obtiene la parte entera y la parte fraccionaria del renglon seleccionado
-        aux = np.zeros(shape=(self.n_variables+1))
+        aux = np.zeros(shape=(0))
         # Se obtiene la parte entera de cada elemento del renglon pivote identificado y se calcula el renglon del corte
-        for i in range (self.n_variables+1):
-            parte_entera,parte_entera = modf(self.restriccion[renglon_minimo][i])
-            aux[i] = parte_entera - self.restriccion[renglon_minimo][i]
+        for i in range (columnas):
+            parte_decimal,parte_entera = modf(self.restriccion[renglon_minimo][i])
+            if self.restriccion[renglon_minimo][i] > 0:
+                aux = np.append(aux,-1 * parte_decimal)
+            elif self.restriccion[renglon_minimo][i] < 0 :
+                aux = np.append(aux,-1 - parte_decimal)
+            else:
+                aux = np.append(aux,0)
 
 
         # Se inserta una columna de ceros en el tableau y en el vector del corte (aux)
@@ -137,10 +144,11 @@ class ModeloSimplex():
 
         #Se intercambia la ultima fila y la penultima para reacomodar el tableau
         #Matriz de restricciones 
-        for i in range(self.n_restriccion):
-            cambio = self.restriccion[i][len(self.restriccion)]
-            self.restriccion[i][len(self.restriccion)] = self.restriccion[i][len(self.restriccion)-1]
-            self.restriccion[i][len(self.restriccion)-1] = cambio
+        filas,columnas = self.restriccion.shape
+        for i in range(filas):
+            cambio = self.restriccion[i][columnas-1]
+            self.restriccion[i][columnas-1] = self.restriccion[i][columnas-2]
+            self.restriccion[i][columnas-2] = cambio
         #Arreglo de la función objetivo
         cambio = self.funcion_objetivo[len(self.funcion_objetivo)-1]
         self.funcion_objetivo[len(self.funcion_objetivo)-1] = self.funcion_objetivo[len(self.funcion_objetivo)-2]
@@ -152,21 +160,30 @@ class ModeloSimplex():
 
         #Se inserta el arreglo de corte a la matriz de restricciones
         self.restriccion = np.vstack([self.restriccion,aux])
+        filas,columnas = self.restriccion.shape
+        self.variables_basicas_arr = np.append(self.variables_basicas_arr,columnas)
         return renglon_minimo
     def columna_pivote_gomory(self, fila_pivote):
         resultado = 1
+        columnas = self.funcion_objetivo.shape
+        columnas = columnas[0]
         divisiones = np.zeros(shape=(0))
-        for i in range(len(self.funcion_objetivo)-1):
+        for i in range(columnas-1):
             if self.restriccion[fila_pivote][i] != 0:
-                division = abs(self.funcion_objetivo[i]/self.restriccion[fila_pivote][i])
-                divisiones = np.append(divisiones,division)
-        resultado = np.argmin(divisiones)
+                division = self.funcion_objetivo[i]/self.restriccion[fila_pivote][i]
+                if division < 0:
+                    divisiones = np.append(divisiones,division)
+                else:
+                    divisiones = np.append(divisiones,-999)
+            else:
+                divisiones = np.append(divisiones,-999)
+        resultado = np.argmax(divisiones)
         return resultado
 
     def parada_gomory(self):
         filas,columnas = self.restriccion.shape
         for i in range (columnas-1):
-            if np.equal(np.mod(self.restriccion[filas][i],1),0):
+            if np.equal(np.mod(self.restriccion[filas-1][i],1),0):
                 return False
             else:
                 return True
