@@ -2,16 +2,6 @@ from math import modf
 import numpy as np
 
 class ModeloSimplex():
-    """ n_restriccion = None
-    n_variables = None
-    variables_basicas_arr = np.zeros(shape=(n_restriccion))
-    funcion_objetivo = np.zeros(shape=(n_variables+1))
-    restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
-    max = True """
-    """
-    Esto es solo un maquetado del la case ModeloSimplex 
-    Los métodos con return 0 modifican al objeto por lo 
-    que la función final ya no debe retornar nada """
 
     def __init__(self,n_variables,n_restriccion):
         """ 
@@ -36,7 +26,7 @@ class ModeloSimplex():
         print("*Digita los coeficientes de la función objetivo*")
         print("************************************************")
         for i in range (n_variables):
-            self.funcion_objetivo[i] = input("x" + str(i) + " = ")
+            self.funcion_objetivo[i] = input("x" + str(i+1) + " = ")
         
 
         """ 
@@ -48,10 +38,10 @@ class ModeloSimplex():
         print("*Digita los coeficientes de las restricciones*")
         print("**********************************************")
         for i in range (n_restriccion):
-            print("***Restricción " + str(i) + ":\n")
+            print("***Restricción " + str(i+1) + ":\n")
             for j in range (n_variables):
-                self.restriccion[i][j] = input("x" + str(j) + " = ")
-            self.restriccion[i][n_variables] = input("b" + str(i) + " = ")
+                self.restriccion[i][j] = input("x" + str(j+1) + " = ")
+            self.restriccion[i][n_variables] = input("b" + str(i+1) + " = ")
 
         #Se establecen la variables básicas
         for i in range (n_restriccion):
