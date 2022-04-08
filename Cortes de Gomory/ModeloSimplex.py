@@ -159,7 +159,7 @@ class ModeloSimplex():
         aux[len(aux)-2] = cambio
 
         #Se inserta el arreglo de corte a la matriz de restricciones
-        self.restriccion = np.vstack([self.restriccion,aux])
+        self.restriccion = np.concatenate([self.restriccion,aux],axis=0)
         filas,columnas = self.restriccion.shape
         self.variables_basicas_arr = np.append(self.variables_basicas_arr,columnas)
         return renglon_minimo
