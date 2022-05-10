@@ -162,7 +162,7 @@ class ModeloSimplex():
         self.restriccion = np.vstack([self.restriccion,aux])
         filas,columnas = self.restriccion.shape
         self.variables_basicas_arr = np.append(self.variables_basicas_arr,columnas)
-        return renglon_minimo
+        return filas-1
     def columna_pivote_gomory(self, fila_pivote):
         resultado = 1
         columnas = self.funcion_objetivo.shape
