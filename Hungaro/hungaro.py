@@ -1,7 +1,4 @@
-from sys import float_repr_style
-from typing_extensions import Self
 import numpy as np
-from soupsieve import select
 
 class hungaro():
     def __init__(self):
@@ -55,5 +52,3 @@ class hungaro():
             self.tabla[indice][i] = 999
         for i in range(self.asignaciones):
             self.tabla_lineas[indice][i] = self.tabla_lineas[indice][i] + 1
-    def minimo_restantes(self):
-        self.tabla.max()
