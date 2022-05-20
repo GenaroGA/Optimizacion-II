@@ -13,14 +13,14 @@ class hungaro():
             for j in range(self.asignaciones):
                 self.tabla[i][j] = float(input("Precio(" + str(i+1) + "," + str(j+1) + ") "))
     def minimos_filas(self):
-        aux = []
         for i in range(self.asignaciones):
+            aux = []
             for j in range(self.asignaciones):
                 aux.append(self.tabla[i][j])
             self.minFilas.append(np.amin(aux))
     def minimos_columnas(self):
-        aux = []
         for i in range(self.asignaciones):
+            aux = []
             for j in range(self.asignaciones):
                 aux.append(self.tabla[j][i])
             self.minColumnas.append(np.amin(aux))
@@ -31,24 +31,28 @@ class hungaro():
     def restar_columnas(self):
         for i in range(self.asignaciones):
             for j in range(self.asignaciones):
-                self.tabla[i][j] = self.tabla[i][j] - self.minColumnas[i]
+                self.tabla[j][i] = self.tabla[j][i] - self.minColumnas[i]
     def contar_ceros(self):
+        self.cerosFilas = []
+        self.cerosColumnas = []
         aux = []
         for i in range(self.asignaciones):
             for j in range(self.asignaciones):
                 aux.append(self.tabla[i][j])
-            self.cerosFilas = aux.count(0)
+            self.cerosFilas.append(aux.count(0))
             aux = []
             for j in range(self.asignaciones):
                 aux.append(self.tabla[j][i])
-            self.cerosColumnas = aux.count(0)
+            self.cerosColumnas.append(aux.count(0))
     def lineas(self):
         if np.amax(self.cerosFilas) >= np.amax(self.cerosColumnas):
             indice = self.cerosFilas.index(np.amax(self.cerosFilas))
-        for i in range(self.asignaciones):
-            self.tabla[indice][i] = 999
+            for i in range(self.asignaciones):
+                self.tabla[indice][i] = 999
+                self.tabla_lineas[indice][i] = self.tabla_lineas[indice][i] + 1
+                
         else:
             indice = self.cerosFilas.index(np.amax(self.cerosColumnas))
-            self.tabla[indice][i] = 999
-        for i in range(self.asignaciones):
-            self.tabla_lineas[indice][i] = self.tabla_lineas[indice][i] + 1
+            for i in range(self.asignaciones):
+                self.tabla[i][indice] = 999
+                self.tabla_lineas[i][indice] = self.tabla_lineas[i][indice] + 1
