@@ -45,12 +45,13 @@ parada = True
 
  #  TODO meter el procedimiento en un while
     
-f_pivote = modelo.corte_gomory()
-c_pivote = modelo.columna_pivote_gomory(f_pivote)
-f_pivote = len(modelo.restriccion)-1
-modelo.variables_basicas(f_pivote,c_pivote)
-modelo.gauss(f_pivote,c_pivote)
-print(modelo.funcion_objetivo)
-print(modelo.restriccion)
-parada = modelo.parada_gomory()
+while parada:
+    f_pivote = modelo.corte_gomory()
+    c_pivote = modelo.columna_pivote_gomory(f_pivote)
+    f_pivote = len(modelo.restriccion)-1
+    modelo.variables_basicas(f_pivote,c_pivote)
+    modelo.gauss(f_pivote,c_pivote)
+    print(modelo.funcion_objetivo)
+    print(modelo.restriccion)
+    parada = modelo.parada_gomory()
 

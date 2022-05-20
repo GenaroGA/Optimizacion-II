@@ -10,7 +10,9 @@ class ModeloSimplex():
         """
         self.n_variables = n_variables
         self.n_restriccion = n_restriccion
-        self.variables_basicas_arr = np.zeros(shape=(n_restriccion))
+        self.variables_basicas_arr = np.zeros(shape=(n_variables))
+        for i in range(n_restriccion):
+            self.variables_basicas_arr[i]=1
         self.funcion_objetivo = np.zeros(shape=(n_variables+1))
         self.restriccion = np.zeros(shape = (n_restriccion,n_variables+1))
 
@@ -68,8 +70,8 @@ class ModeloSimplex():
         return resultado
 
     def variables_basicas(self,pivote_fila,pivote_columna):
-        indice = np.where(self.variables_basicas_arr == pivote_fila+1)
-        self.variables_basicas_arr[indice[0][0]] = pivote_columna+1
+        self.variables_basicas_arr[pivote_fila] = 0
+        self.variables_basicas_arr[pivote_columna] = 1
 
     def gauss(self,pivote_fila, pivote_columna):
         # Se ubica el elemento pivote
